@@ -1,7 +1,24 @@
-var app = require('./app');  //importing the Express app created in app.js.
+require("dotenv").config();
+const mongoose = require("mongoose");
 
-var server = app.listen(3000, function(){
-    console.log(`Express is running on port ${server.address().port}`);  //output a message to the terminal to indicate that the server is running
-});   
+mongoose.connect(process.env.DATABASE, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+mongoose.connection
+  .on("open", () => {
+    console.log("Mongoose connection open");
+  })
+  .on("error", (err) => {
+    console.log(`Connection error: ${err.message}`);
+  });
+
+require("./models/Registration");
+const app = require("./app");
+
+const server = app.listen(3000, function () {
+  console.log(`Express is running on port ${server.address().port}`);
+});
 
 //运行的话  在bash输入 node start.js
